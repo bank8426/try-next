@@ -15,7 +15,8 @@ async function getBlogById(id) {
 }
 
 export default async function ({ params }) {
-  let blog = await getBlogById(params.id);
+  let { id } = await params;
+  let blog = await getBlogById(id);
 
   console.log(blog);
 
