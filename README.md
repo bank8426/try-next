@@ -119,12 +119,14 @@ Open [http://localhost:3000](http://localhost:3000/) in your browser to view the
 
 - JWT token verification process to make sure user's token is valid
 
-  1. In `middleware`, server will use same `secret key` to verify the JWT `token` which will return correct `payload` if `token` use same `secret key` to sign
+  1. In `middleware`, server gets `token` from `cookie`
+
+  2. Server uses same `secret key` to verify the `token` which will return correct `payload` if `token` signed with same `secret key`
 
      - in `jwtVerify()` from `jose` library will auto check `exp` (expiration time) and throw an error if the `token` expired
 
-  2. If `email` in `payload` is invalid (`email` !== `bank`), the server will redirect to the `login` page
-  3. If `email` in `payload` is valid, the server will add `user` to `request headers` and continue to the destination page
+  3. If `email` in `payload` is invalid (`email` !== `bank`), the server will redirect to the `login` page
+  4. If `email` in `payload` is valid, the server will add `user` to `request headers` and continue to the destination page
 
 - `mockapi.io` , I used it in my previous project
   [try-react-vite](https://github.com/bank8426/try-react-vite). But this time I also use it to add `mock image` (from picsum.photos) for blog.
