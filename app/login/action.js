@@ -12,15 +12,6 @@ export async function login(prevState, formData) {
     k: process.env.JOSE_SECRET,
   };
 
-  console.log(secretJWK);
-
-  console.log(prevState);
-  // console.log(formData);
-  // console.log(formData.getAll());
-  // console.log(formData.values());
-  console.log(formData.get("email"));
-  console.log(formData.get("password"));
-
   if (email != "bank" || password != "1234")
     return { message: "Invalid username or password" };
 
@@ -32,10 +23,6 @@ export async function login(prevState, formData) {
     .setIssuedAt()
     .setExpirationTime("1h")
     .sign(secretKey);
-  console.log("secretKey");
-  console.log(secretKey);
-  console.log("token");
-  console.log(token);
 
   cookies().set("token", token);
 

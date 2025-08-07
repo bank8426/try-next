@@ -1,11 +1,7 @@
 import Image from "next/image";
 
 async function getBlogById(id) {
-  const response = await fetch(
-    `${process.env.MOCKAPI_BASE_URL}/${id}`
-    // { method: "GET" }
-  );
-  console.log("asdasdasdas");
+  const response = await fetch(`${process.env.MOCKAPI_BASE_URL}/${id}`);
 
   if (!response.ok) {
     throw new Error(`Cannot fetch blog data with id : ${id}`);
@@ -17,8 +13,6 @@ async function getBlogById(id) {
 export default async function ({ params }) {
   let { id } = await params;
   let blog = await getBlogById(id);
-
-  console.log(blog);
 
   return (
     <div>

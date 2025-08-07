@@ -6,8 +6,8 @@ export async function middleware(request) {
   try {
     const token = request.cookies.get("token").value;
     const secretJWK = {
-      kty: "oct",
-      k: process.env.JOSE_SECRET,
+      kty: "oct", // key type
+      k: process.env.JOSE_SECRET, // key value
     };
 
     const secretKey = await importJWK(secretJWK, "HS256");

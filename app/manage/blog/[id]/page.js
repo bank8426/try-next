@@ -2,16 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 async function getBlogById(id) {
-  console.log("asdasdasdasdasd");
-  console.log(`${process.env.NEXT_PUBLIC_MOCKAPI_BASE_URL}/${id}`);
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_MOCKAPI_BASE_URL}/${id}`
-    // { method: "GET" }
   );
-  console.log("asdasdasdas");
 
   if (!response.ok) {
     throw new Error(`Cannot fetch blog data with id : ${id}`);
@@ -21,15 +17,13 @@ async function getBlogById(id) {
 }
 
 export default function ({ params }) {
-  // let blog = await getBlogById(id);
   const [blogState, setBlogState] = useState({ name: "" });
+  const router = useRouter();
 
   const initBlog = async () => {
     try {
       let { id } = await params;
       const blog = await getBlogById(id);
-      console.log("blog");
-      console.log(blog);
       setBlogState(blog);
     } catch (error) {
       console.log(error);
@@ -49,7 +43,6 @@ export default function ({ params }) {
 
   const handleSubmitEditBlogName = async (event) => {
     event.preventDefault();
-    console.log("Helloooooo");
 
     try {
       let result = await fetch(
@@ -63,8 +56,13 @@ export default function ({ params }) {
         }
       );
 
-      console.log("result");
-      console.log(result);
+      if (!result.ok) {
+        throw new Error(`Cannot update blog data with id : ${blogState.id}`);
+      }
+
+      alert("Update blog name successfully");
+
+      router.push("/manage/blog");
     } catch (error) {
       console.log(error);
     }

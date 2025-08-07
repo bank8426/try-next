@@ -1,12 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 async function getBlogs() {
-  const response = await fetch(
-    process.env.MOCKAPI_BASE_URL
-    // { method: "GET" }
-  );
-  console.log("asdasdasdas");
+  const response = await fetch(process.env.MOCKAPI_BASE_URL);
 
   if (!response.ok) {
     throw new Error("Cannot fetcg blogs data");
@@ -16,10 +11,7 @@ async function getBlogs() {
 }
 
 export default async function () {
-  // userEffect
   const blogs = await getBlogs();
-  console.log(blogs);
-  // console.log(result.body.json());
 
   return (
     <>
