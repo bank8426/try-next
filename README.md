@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h3 align="center">Next.js Blog App</h3>
 
-## Getting Started
+## ⚠️ Note
 
-First, run the development server:
+This project was implemented based on a tutorial video on YouTube from mikelopster
+[ลอง Next.js 14 แบบ Quick overview กัน](https://www.youtube.com/watch?v=e8-WmjKdfRo).
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Demo](#demo)
+3. [Tech Stack](#tech-stack)
+4. [Quick Start](#quick-start)
+5. [What I learned](#learn)
+
+## <a name="introduction">Introduction</a>
+
+The project idea is to create a blog app that will be used by 2 groups of users
+
+- Admin ( hard code with username "bank" and password "1234")
+  - need to sign in to access the blog management page
+  - can edit blog name only
+- User
+  - can browse blog only
+
+Just a begining step to understand more about `next.js`
+
+## <a name="demo">Demo</a>
+
+#### Admin Login
+
+<a href="">
+  <img src="public/readme/admin-login.gif" alt="Admin Login" />
+</a>
+
+#### Admin Update Blog Name
+
+<a href="">
+  <img src="public/readme/admin-update-blog-name.gif" alt="Admin Update Blog Name" />
+</a>
+
+#### User Browse Blog
+
+<a href="">
+  <img src="public/readme/user-browse-blog.gif" alt="User Browse Blog" />
+</a>
+
+## <a name="tech-stack">Tech Stack</a>
+
+- Next.js v15 - as a framework
+- jose - as a JWT library for authentication
+- mockapi.io - as a CRUD API backend, database, and generate mock data
+- tailwindcss - as a CSS framework for styling
+
+## <a name="quick-start">Quick Start</a>
+
+Follow these steps to set up the project locally on your machine.
+
+**Prerequisites**
+
+- Git
+- Node.js
+- npm
+
+**Cloning the Repository**
+
+```bash
+git clone https://github.com/bank8426/try-next.git
+cd try-next
+```
+
+**Installation**
+
+Install the project dependencies using npm:
+
+```bash
+npm install
+```
+
+**Set Up Environment Variables**
+
+1. Create a new file named `.env.local` and copy content inside `.env.example`
+2. Replace the placeholder values with your actual credentials
+
+```env
+# https://mockapi.io/projects create project and resource
+# this variable will available in server-side only
+MOCKAPI_BASE_URL=
+# this variable will available in client-side only since it starts with NEXT_PUBLIC_
+NEXT_PUBLIC_MOCKAPI_BASE_URL=
+
+# https://www.npmjs.com/package/jose just put random string for learning purpose but for production use function to generate secure string
+JOSE_SECRET=
+```
+
+**Running the Project**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000/) in your browser to view the project.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## <a name="learn">What I learned</a>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- next.js has a lot of thing built-in such as
 
-## Learn More
+  - `router` something similar to `react-router`. But it use `folder structure` to define routes instead of `index.js` or `route.js`.
+  - `middleware` is a function that runs before the request is processed, it can be used for `authentication` checking
+  - `next.config.mjs` is a configuration file for next.js. for this project I need to add `remotePatterns` for `picsum.photos` to allow loading images from `external sources`
 
-To learn more about Next.js, take a look at the following resources:
+- `jose` is a library that allows you to create a JWT `token` for authentication and authorization.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Authentication process to get JWT token
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  1. User login with `username` and `password` (I used hardcodeed username and password which is `bad practice`)
+  2. Server validate the credentials
+  3. If valid, server creates `secret key` based on JWK (JSON Web Key) which include `JOSE_SECRET` environment variable and then use it to sign the JWT `token` which include user's `email` and set it to expire in 1 hour from the issue time, then store it in `cookie`
 
-## Deploy on Vercel
+- JWT token verification process to make sure user's token is valid
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  1. In `middleware`, server will use same `secret key` to verify the JWT `token` which will return correct `payload` if `token` use same `secret key` to sign
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+     - in `jwtVerify()` from `jose` library will auto check `exp` (expiration time) and throw an error if the `token` expired
+
+  2. If `email` in `payload` is invalid (`email` !== `bank`), the server will redirect to the `login` page
+  3. If `email` in `payload` is valid, the server will add `user` to `request headers` and continue to the destination page
+
+- `mockapi.io` , I used it in my previous project
+  [try-react-vite](https://github.com/bank8426/try-react-vite). But this time I also use it to add `mock image` (from picsum.photos) for blog.
+
+- `tailwindcss` is a CSS framework for building custom designs. It come with light and dark mode. But i still need to learn more since add it to project will clean up all of html element's css.
+  - Such as `h1` tag will not has any styling and look like `p` tag
